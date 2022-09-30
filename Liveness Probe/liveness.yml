@@ -1,0 +1,65 @@
+# LiveNess Probe
+
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    test: liveness
+  name: mylivenessprobe
+spec:
+  containers:
+  - name: liveness
+    image: ubuntu
+    args:
+    - /bin/sh
+    - -c
+    - touch /tmp/healthy; sleep 1000
+    livenessProbe:                                          
+      exec:
+        command:                                         
+        - cat                
+        - /tmp/healthy
+      initialDelaySeconds: 5          
+      periodSeconds: 5                                 
+      timeoutSeconds: 30 
+   
+   # Liveness probe for Nginx Web Server
+   
+   apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: my-application-web
+  name: my-application-web
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: my-application-web
+  template:
+    metadata:
+      labels:
+        app: my-application-web
+    spec:
+      containers:
+      - image: nginx:latest
+        name: my-application-nginx
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8443
+          protocol: TCP
+        livenessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - "[ -f /run/nginx.pid ] && ps -A | grep nginx"
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        readinessProbe:
+          httpGet:
+            scheme: HTTPS
+            path: /index.html
+            port: 8443
+          initialDelaySeconds: 10
+          periodSeconds: 5
