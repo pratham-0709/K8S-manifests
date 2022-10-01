@@ -1,0 +1,30 @@
+# How to create namespace using manifest
+apiVersion: v1
+kind: Nmaespace
+metadata:
+  name: test
+  labels:
+    name: dev
+
+===== 
+To create Pod using the namespace
+
+kind: Pod                              
+apiVersion: v1                     
+metadata:                           
+  name: testpod                  
+spec:                                    
+  containers:                      
+    - name: c00                     
+      image: ubuntu              
+      command: ["/bin/bash", "-c", "while true; do echo Technical Guftgu; sleep 5 ; done"]
+  restartPolicy: Never 
+  
+  Run the Command : kubectl apply -f <filename> -n <namespace>
+  ======================================= 
+  To change default namespace with your newly created namespace 
+
+  kubectl config set-context $(kubectl config current-context) --namespace= <namespace name>
+  kubectl config view | grep namespace 
+  
+  ========================================= 
