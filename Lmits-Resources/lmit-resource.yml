@@ -1,0 +1,107 @@
+# Limit Ranges 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: resources
+spec:
+  containers:
+  - name: resource
+    image: centos
+    command: ["/bin/bash", "-c", "while true; do echo Technical-Guftgu; sleep 5 ; done"]
+    resources:                                          
+      requests:
+        memory: "64Mi"
+        cpu: "100m"
+      limits:
+        memory: "128Mi"
+        cpu: "200m"
+========================================= 
+Creating A Namespace 
+
+kubectl create namespace <namespace name>
+
+Create a LimitRange and a Pod
+
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: cpu-min-max
+spec:
+  limits:
+  - max:
+      cpu: "600m"
+    min:
+      cpu: "200m"
+    type: Container
+
+For Output Run Command -- kubectl get limitrange 
+
+#Create A NameSpace 
+
+kubectl create namespace testlimit
+
+===================================================================================
+
+#how to configure minimum and maximum CPU constraints per namespace 
+
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: cpu-min-max
+spec:
+  limits:
+  - max:
+      cpu: "600m"
+    min:
+      cpu: "200m"
+    type: Container
+
+# how to configure minimum and maximum Memory constraints per namespace.
+
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: mem-min-max
+spec:
+  limits:
+  - max:
+      memory: 900Mi
+    min:
+      memory: 300Mi
+    type: Container
+    
+=============================================================================
+
+=============================================
+
+Limit Resources and Requests In Nginx Deployment
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        resources:
+            limits:
+              memory: 200Mi
+              cpu: 0.9
+            requests:
+              memory: 150Mi
+              cpu: 200m
+        ports:
+        - containerPort: 80
+        
