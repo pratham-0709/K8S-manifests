@@ -1,4 +1,4 @@
-# Persistent Volume and Persistent Volume Claim For Wordpress. 
+# Persistent Volume and Persistent Volume Claim For Wordpress. Storage Must Be Equal To 2GB or more than it. 
 apiVersion: v1
 kind: PersistentVolume
 metadata:
